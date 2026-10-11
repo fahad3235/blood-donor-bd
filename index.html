@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blood Donor BD — রক্তদাতা বিডি</title>
+<meta name="description" content="Blood Donor BD — a free, offline, bilingual (EN/বাংলা) personal blood-donation organizer for Bangladesh.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="drop" aria-hidden="true">🩸</span>
+    <div>
+      <h1 id="appTitle">Blood Donor BD</h1>
+      <p class="tagline" id="tagline"></p>
+    </div>
+  </div>
+  <div class="lang-toggle" role="group" aria-label="Language / ভাষা">
+    <button type="button" id="langEn">EN</button>
+    <button type="button" id="langBn">বাংলা</button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Sections">
+  <a href="#compat" id="navCompat">🩸 Compatibility</a>
+  <a href="#donors" id="navDonors">👥 Donors</a>
+  <a href="#requests" id="navRequests">📋 Requests</a>
+  <a href="#data" id="navData">💾 Data</a>
+</nav>
+
+<main>
+  <!-- 1. Compatibility checker -->
+  <section class="card" id="compat" aria-labelledby="compatH">
+    <h2 id="compatH">🩸 Blood-group compatibility</h2>
+    <div class="row">
+      <div class="field">
+        <label for="compatGroup" id="lblCompatGroup">Your blood group</label>
+        <select id="compatGroup"></select>
+      </div>
+    </div>
+    <p class="subhead" id="donateToH">Can donate to</p>
+    <div id="donateToList"></div>
+    <p class="subhead" id="receiveFromH">Can receive from</p>
+    <div id="receiveFromList"></div>
+    <p class="hint" id="compatNote"></p>
+  </section>
+
+  <!-- 2. Donor registry -->
+  <section class="card" id="donors" aria-labelledby="donorsH">
+    <h2 id="donorsH">👥 Donor registry</h2>
+    <form id="donorForm" novalidate>
+      <input type="hidden" id="editingId" value="">
+      <div class="row">
+        <div class="field">
+          <label for="donorName" id="lblName">Name *</label>
+          <input id="donorName" type="text" autocomplete="off" maxlength="80">
+          <span class="ferr" id="err-name"></span>
+        </div>
+        <div class="field">
+          <label for="donorGroup" id="lblGroup">Blood group *</label>
+          <select id="donorGroup"></select>
+          <span class="ferr" id="err-group"></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="donorPhone" id="lblPhone">Phone (optional)</label>
+          <input id="donorPhone" type="tel" inputmode="numeric" autocomplete="off" maxlength="20" placeholder="01XXXXXXXXX">
+          <span class="hint" id="phoneHint"></span>
+          <span class="ferr" id="err-phone"></span>
+        </div>
+        <div class="field">
+          <label for="donorArea" id="lblArea">Area / Upazila (optional)</label>
+          <input id="donorArea" type="text" autocomplete="off" maxlength="80">
+          <span class="ferr" id="err-area"></span>
+        </div>
+        <div class="field">
+          <label for="donorLast" id="lblLast">Last donation date (optional)</label>
+          <input id="donorLast" type="date">
+          <span class="ferr" id="err-lastDonation"></span>
+        </div>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <button type="submit" class="btn" id="donorSubmit">Add donor</button>
+        <button type="button" class="btn secondary" id="donorCancel" hidden>Cancel</button>
+      </div>
+      <div class="msg err" id="donorFormMsg" role="alert"></div>
+    </form>
+
+    <div class="toolbar" style="margin-top:10px">
+      <div class="field">
+        <label for="donorSearch" id="lblSearch">Search</label>
+        <input id="donorSearch" type="search" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="donorGroupFilter" id="lblGroupFilter">Blood group</label>
+        <select id="donorGroupFilter"></select>
+      </div>
+      <div class="field">
+        <label for="findForGroup" id="lblFindFor">Find donors for recipient group</label>
+        <select id="findForGroup"></select>
+      </div>
+      <button type="button" class="btn secondary small" id="clearFilters">✕</button>
+    </div>
+
+    <ul class="list" id="donorList"></ul>
+    <div class="empty" id="donorEmpty" hidden></div>
+  </section>
+
+  <!-- 3. Request board -->
+  <section class="card" id="requests" aria-labelledby="requestsH">
+    <h2 id="requestsH">📋 Blood request board</h2>
+    <form id="requestForm" novalidate>
+      <div class="row">
+        <div class="field">
+          <label for="reqPatient" id="lblPatient">Patient name *</label>
+          <input id="reqPatient" type="text" autocomplete="off" maxlength="80">
+          <span class="ferr" id="err-patient"></span>
+        </div>
+        <div class="field">
+          <label for="reqGroup" id="lblReqGroup">Blood group needed *</label>
+          <select id="reqGroup"></select>
+          <span class="ferr" id="err-reqGroup"></span>
+        </div>
+        <div class="field">
+          <label for="reqBags" id="lblBags">Bags needed *</label>
+          <input id="reqBags" type="number" min="1" step="1" value="1">
+          <span class="ferr" id="err-bags"></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="reqHospital" id="lblHospital">Hospital *</label>
+          <input id="reqHospital" type="text" autocomplete="off" maxlength="120">
+          <span class="ferr" id="err-hospital"></span>
+        </div>
+        <div class="field">
+          <label for="reqContact" id="lblContact">Contact (optional)</label>
+          <input id="reqContact" type="text" autocomplete="off" maxlength="40">
+          <span class="ferr" id="err-contact"></span>
+        </div>
+        <div class="field">
+          <label for="reqNeededBy" id="lblNeededBy">Needed by (optional)</label>
+          <input id="reqNeededBy" type="date">
+          <span class="ferr" id="err-neededBy"></span>
+        </div>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <button type="submit" class="btn" id="reqSubmit">Post request</button>
+      </div>
+      <div class="msg err" id="reqFormMsg" role="alert"></div>
+    </form>
+
+    <p class="subhead" id="openH">Open requests</p>
+    <ul class="list" id="openList"></ul>
+    <div class="empty" id="openEmpty" hidden></div>
+    <p class="subhead" id="fulfilledH">Fulfilled requests</p>
+    <ul class="list" id="fulfilledList"></ul>
+    <div class="empty" id="fulfilledEmpty" hidden></div>
+  </section>
+
+  <!-- 4. Data export / import -->
+  <section class="card" id="data" aria-labelledby="dataH">
+    <h2 id="dataH">💾 Your data</h2>
+    <p class="hint" id="dataNote"></p>
+    <div class="row">
+      <button type="button" class="btn secondary" id="exportBtn">⬇ Export JSON</button>
+      <div class="field">
+        <label for="importFile" id="lblImport">Import JSON</label>
+        <input id="importFile" type="file" accept="application/json,.json">
+      </div>
+    </div>
+    <div class="msg" id="importMsg" role="alert"></div>
+  </section>
+</main>
+
+<footer>
+  <p id="disclaimer"></p>
+  <p class="sos" id="sos"></p>
+</footer>
+
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

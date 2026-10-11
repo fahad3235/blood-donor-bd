@@ -1,0 +1,5 @@
+# blood-donor-bd .gitignore
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
